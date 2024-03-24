@@ -10,6 +10,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -46,9 +49,20 @@ public class DataLoader implements CommandLineRunner {
         u1.setEmail("a@company.com");
         u1.setPhoneNumber("0700000000");
 
+        var u2 = new User();
+        u2.setName("B");
+        u2.setAddress("addr b");
+        u2.setEmail("b@company.com");
+        u2.setPhoneNumber("0700000000");
         userRepository.save(u1);
+        userRepository.save(u2);
 
         var o1 = new Order();
+        Set<Product> products = new HashSet<>();
+        products.add(p1);
+        o1.setProducts(products);
+        o1.setTotalAmount(p1.getPrice());
+        o1.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
         o1.setUser(u1);
 
         orderRepository.save(o1);
