@@ -24,11 +24,6 @@ public class Product {
     private BigDecimal price;
     private int stock;
 
-    @ManyToMany
-    @JoinTable(
-            name = "products_orders",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id")
-    )
+    @ManyToMany(mappedBy = "products")
     private Set<Order> orders;
 }
