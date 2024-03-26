@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -78,6 +79,8 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal total_price_rounded = new BigDecimal(total_price).setScale(2, RoundingMode.UP);
 
         order.setTotalAmount(total_price_rounded);
+
+        order.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
 
         Order res = orderRepository.save(order);
 
