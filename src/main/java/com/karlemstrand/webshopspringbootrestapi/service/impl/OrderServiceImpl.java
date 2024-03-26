@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static com.karlemstrand.webshopspringbootrestapi.utils.AppConstants.*;
 
@@ -40,6 +41,11 @@ public class OrderServiceImpl implements OrderService {
 //        System.out.println(res.get(0));
 //        List<Product> products = productRepository.findAllByOrderId(res.get(0).getId());
         return res;
+    }
+
+    public List<Order> getAllOrdersByUserId(UUID userId) {
+
+        return orderRepository.findAllByUserId(userId);
     }
 
     @Override

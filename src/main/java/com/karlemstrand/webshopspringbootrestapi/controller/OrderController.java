@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,6 +23,11 @@ public class OrderController {
     @GetMapping("/orders")
     public ResponseEntity<List<Order>> getAllOrders() {
         return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
+    }
+
+    @GetMapping("/ordersByUserId")
+    public ResponseEntity<List<Order>> getAllOrdersByUserId(@RequestParam(value = "userId", required = true) UUID userId){
+        return new ResponseEntity<>(orderService.getAllOrdersByUserId(userId), HttpStatus.OK);
     }
 
     @PostMapping("/orders")
