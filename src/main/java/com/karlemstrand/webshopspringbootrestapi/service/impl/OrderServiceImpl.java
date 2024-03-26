@@ -13,10 +13,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.karlemstrand.webshopspringbootrestapi.utils.AppConstants.*;
 
@@ -46,6 +44,33 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getAllOrdersByUserId(UUID userId) {
 
         return orderRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public double getTotalPriceByUserIdAndDateRange(UUID userId, String startDateString, String endDateString) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSSSSS");
+            Date startDate = dateFormat.parse(startDateString);
+            Timestamp start = new java.sql.Timestamp(startDate.getTime());
+            Date endDate = dateFormat.parse(endDateString);
+            Timestamp end = new java.sql.Timestamp(endDate.getTime());
+
+            List<Order> res = orderRepository.findAllByCreationTimestampBetween(start, end);
+
+            // calculate price
+            double total_price = 0;
+            for (int i = 0; i < res.size(); i++) {
+                Order order = res.get(i);
+                if (userId.equals(order.getUser().getId())){
+                    total_price += order.getTotalAmount().doubleValue();
+                }
+            }
+            return total_price;
+
+        } catch(Exception e) { //this generic but you can control another types of exception
+            throw new RuntimeException("your date format is wrong!");
+        }
+
     }
 
     @Override

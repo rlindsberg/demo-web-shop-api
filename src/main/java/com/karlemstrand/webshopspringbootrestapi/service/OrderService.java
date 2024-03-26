@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface OrderService {
     List<Order> getAllOrders();
     List<Order> getAllOrdersByUserId(UUID userId);
+    // a date has format "2000-01-02 13:04:56.123456"
+    double getTotalPriceByUserIdAndDateRange(UUID userId, String startDate, String endDate);
 
     OrderDto createOrder(OrderDto orderDto);
 }
