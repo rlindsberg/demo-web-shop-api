@@ -1,43 +1,48 @@
 package com.karlemstrand.webshopspringbootrestapi;
 
+import com.karlemstrand.webshopspringbootrestapi.dtos.OrderDto;
 import com.karlemstrand.webshopspringbootrestapi.entity.Order;
 import com.karlemstrand.webshopspringbootrestapi.entity.Product;
 import com.karlemstrand.webshopspringbootrestapi.entity.User;
 import com.karlemstrand.webshopspringbootrestapi.repository.OrderRepository;
 import com.karlemstrand.webshopspringbootrestapi.repository.ProductRepository;
 import com.karlemstrand.webshopspringbootrestapi.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
+//@Component
 public class DataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
 
-    public DataLoader(UserRepository userRepository, OrderRepository orderRepository, ProductRepository productRepository) {
+    public DataLoader(UserRepository userRepository, OrderRepository orderRepository, ProductRepository productRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public void run(String... args) throws Exception {
         var p1 = new Product();
         p1.setName("Milk");
-        p1.setPrice(BigDecimal.valueOf(13.99));
-        p1.setStock(10);
+        p1.setPrice(13.99);
+        p1.setQuantity(10);
 
         var p2 = new Product();
         p2.setName("Chocolate");
-        p2.setPrice(BigDecimal.valueOf(23.99));
-        p2.setStock(10);
+        p2.setPrice(23.99);
+        p2.setQuantity(10);
 
         productRepository.save(p1);
         productRepository.save(p2);
@@ -58,14 +63,20 @@ public class DataLoader implements CommandLineRunner {
         userRepository.save(u2);
 
         var o1 = new Order();
-        Set<Product> products = new HashSet<>();
-        products.add(p1);
-        o1.setProducts(products);
-        o1.setTotalAmount(p1.getPrice());
+        o1.setTotalAmount(BigDecimal.valueOf(p1.getPrice()));
         o1.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
         o1.setUser(u1);
 
+
         orderRepository.save(o1);
+
+        Set<Product> products = new HashSet<>(Arrays.asList(p1, p2));
+        o1.setProducts(products);
+
+        orderRepository.save(o1);
+
+        var t = modelMapper.map(o1, OrderDto.class);
+        System.out.println(t);
 
     }
 }

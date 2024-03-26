@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,8 +20,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
-    private BigDecimal price;
-    private int stock;
+    private double price;
+    private int quantity;
 
     @ManyToMany(mappedBy = "products")
     private Set<Order> orders;
