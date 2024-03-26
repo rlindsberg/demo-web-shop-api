@@ -30,6 +30,16 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getAllOrdersByUserId(userId), HttpStatus.OK);
     }
 
+    @GetMapping("/totalPriceByUserIdAndDateRange")
+    public double getTotalPriceByUserIdAndDateRange(
+            @RequestParam(value = "userId", required = true) UUID userId,
+            @RequestParam(value = "start", required = true) String start,
+            @RequestParam(value = "end", required = true) String end
+    ){
+        return orderService.getTotalPriceByUserIdAndDateRange(userId, start, end);
+    }
+
+
     @PostMapping("/orders")
     public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
         return new ResponseEntity<>(orderService.createOrder(orderDto), HttpStatus.OK);
